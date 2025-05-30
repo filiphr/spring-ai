@@ -91,11 +91,11 @@ public final class MethodToolCallback implements ToolCallback {
 
 	@Override
 	public String call(String toolInput) {
-		return call(toolInput, null);
+		return call(toolInput, ToolContext.empty());
 	}
 
 	@Override
-	public String call(String toolInput, @Nullable ToolContext toolContext) {
+	public String call(String toolInput, ToolContext toolContext) {
 		Assert.hasText(toolInput, "toolInput cannot be null or empty");
 
 		logger.debug("Starting execution of tool: {}", this.toolDefinition.name());
@@ -115,7 +115,7 @@ public final class MethodToolCallback implements ToolCallback {
 		return this.toolCallResultConverter.convert(result, returnType);
 	}
 
-	private void validateToolContextSupport(@Nullable ToolContext toolContext) {
+	private void validateToolContextSupport(ToolContext toolContext) {
 		var isNonEmptyToolContextProvided = toolContext != null && !CollectionUtils.isEmpty(toolContext.getContext());
 		var isToolContextAcceptedByMethod = Stream.of(this.toolMethod.getParameterTypes())
 			.anyMatch(type -> ClassUtils.isAssignable(type, ToolContext.class));
@@ -130,7 +130,7 @@ public final class MethodToolCallback implements ToolCallback {
 	}
 
 	// Based on the implementation in MethodToolCallback.
-	private Object[] buildMethodArguments(Map<String, Object> toolInputArguments, @Nullable ToolContext toolContext) {
+	private Object[] buildMethodArguments(Map<String, Object> toolInputArguments, ToolContext toolContext) {
 		return Stream.of(this.toolMethod.getParameters()).map(parameter -> {
 			if (parameter.getType().isAssignableFrom(ToolContext.class)) {
 				return toolContext;

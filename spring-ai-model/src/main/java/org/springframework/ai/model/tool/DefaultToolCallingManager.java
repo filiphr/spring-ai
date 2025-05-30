@@ -147,11 +147,11 @@ public final class DefaultToolCallingManager implements ToolCallingManager {
 	}
 
 	private static ToolContext buildToolContext(Prompt prompt, AssistantMessage assistantMessage) {
-		Map<String, Object> toolContextMap = Map.of();
+		ToolContext toolContext = ToolContext.empty();
 
 		if (prompt.getOptions() instanceof ToolCallingChatOptions toolCallingChatOptions
 				&& !CollectionUtils.isEmpty(toolCallingChatOptions.getToolContext())) {
-			toolContextMap = new HashMap<>(toolCallingChatOptions.getToolContext());
+			Map<String, Object> toolContextMap = new HashMap<>(toolCallingChatOptions.getToolContext());
 
 			List<Message> messageHistory = new ArrayList<>(prompt.copy().getInstructions());
 			messageHistory.add(new AssistantMessage(assistantMessage.getText(), assistantMessage.getMetadata(),
@@ -159,9 +159,10 @@ public final class DefaultToolCallingManager implements ToolCallingManager {
 
 			toolContextMap.put(ToolContext.TOOL_CALL_HISTORY,
 					buildConversationHistoryBeforeToolExecution(prompt, assistantMessage));
+			toolContext = new ToolContext(toolContextMap);
 		}
 
-		return new ToolContext(toolContextMap);
+		return toolContext;
 	}
 
 	private static List<Message> buildConversationHistoryBeforeToolExecution(Prompt prompt,

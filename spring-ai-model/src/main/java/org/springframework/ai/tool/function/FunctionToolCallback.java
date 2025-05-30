@@ -89,11 +89,11 @@ public class FunctionToolCallback<I, O> implements ToolCallback {
 
 	@Override
 	public String call(String toolInput) {
-		return call(toolInput, null);
+		return call(toolInput, ToolContext.empty());
 	}
 
 	@Override
-	public String call(String toolInput, @Nullable ToolContext toolContext) {
+	public String call(String toolInput, ToolContext toolContext) {
 		Assert.hasText(toolInput, "toolInput cannot be null or empty");
 
 		logger.debug("Starting execution of tool: {}", this.toolDefinition.name());

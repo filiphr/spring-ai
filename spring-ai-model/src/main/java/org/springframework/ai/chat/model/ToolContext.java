@@ -45,6 +45,8 @@ import org.springframework.ai.chat.messages.Message;
  */
 public final class ToolContext {
 
+	private static final ToolContext EMPTY = new ToolContext(Collections.emptyMap());
+
 	/**
 	 * The key for the running, tool call history stored in the context map.
 	 */
@@ -77,6 +79,14 @@ public final class ToolContext {
 	@SuppressWarnings("unchecked")
 	public List<Message> getToolCallHistory() {
 		return (List<Message>) this.context.get(TOOL_CALL_HISTORY);
+	}
+
+	/**
+	 * Returns an empty ToolContext instance.
+	 * @return an empty ToolContext instance, which contains an empty context map.
+	 */
+	public static ToolContext empty() {
+		return EMPTY;
 	}
 
 }
